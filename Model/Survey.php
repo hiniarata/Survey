@@ -53,7 +53,7 @@ class Survey extends SurveyApp {
   * @return array 
   * @access public
   */
-  public function tally($id = null){
+  public function tally($id = null, $beginDate = null, $endData = null){
     /* 除外 */
     if (empty($id)) {
       return false;
@@ -64,12 +64,21 @@ class Survey extends SurveyApp {
     $messageModel->setup($id);
     //フィールドデータの取得
     $fields = $messageModel->mailFields;
-    //受信情報の取得
-    //$messages = $messageModel->find('all');
     //結果格納変数
     $result = array();
     //カウンタ準備
     $i = 0;
+
+    //期間指定の確認
+    $postDate[] = array();
+    if (!empty($beginDate)) {
+      $begin = date("Y-m-d H:i:s", strtotime($beginDate));
+      $postDate[] = array('Message.created >=' => $begin);
+    }
+    if (!empty($endData)) {
+      $end = date("Y-m-d H:i:s", strtotime($endData));
+      $postDate[] = array('Message.created <=' => $end);
+    }
 
     //フィールド毎に集計していく。
     foreach ($fields as $data) {
@@ -86,9 +95,11 @@ class Survey extends SurveyApp {
               if (!empty($value)) {
                 //カウントする
                 $coutnt = 0;
-                $count = $messageModel->find('count', array('conditions' => array(
-                  $data['MailField']['field_name'] => $sourceNum
-                )));
+                //条件文生成
+                $conditions = $postDate;
+                $conditions[] = array($data['MailField']['field_name'] => $sourceNum);
+                $count = $messageModel->find('count', array('conditions' => $conditions));
+                //結果格納
                 $result[$i]['source'][$c] = $value;
                 $result[$i]['count'][$c] = $count;
                 $result[$i]['field_name'] = $data['MailField']['field_name'];
@@ -113,9 +124,11 @@ class Survey extends SurveyApp {
               if (!empty($value)) {
                 //カウントする
                 $coutnt = 0;
-                $count = $messageModel->find('count', array('conditions' => array(
-                  $data['MailField']['field_name'] .' REGEXP' => '^'.$sourceNum.'$|^'.$sourceNum.'\||\|'.$sourceNum.'$|\|'.$sourceNum.'\|'
-                )));
+                //条件文生成
+                $conditions = $postDate;
+                $conditions[] = array($data['MailField']['field_name'] .' REGEXP' => '^'.$sourceNum.'$|^'.$sourceNum.'\||\|'.$sourceNum.'$|\|'.$sourceNum.'\|');
+                $count = $messageModel->find('count', array('conditions' => $conditions));
+                //結果格納
                 $result[$i]['source'][$c] = $value;
                 $result[$i]['count'][$c] = $count;
                 $result[$i]['field_name'] = $data['MailField']['field_name'];
@@ -138,9 +151,11 @@ class Survey extends SurveyApp {
               if (!empty($value)) {
                 //カウントする
                 $coutnt = 0;
-                $count = $messageModel->find('count', array('conditions' => array(
-                  $data['MailField']['field_name'] => $sourceNum
-                )));
+                //条件文生成
+                $conditions = $postDate;
+                $conditions[] = array($data['MailField']['field_name'] => $sourceNum);
+                $count = $messageModel->find('count', array('conditions' => $conditions));
+                //結果格納
                 $result[$i]['source'][$c] = $value;
                 $result[$i]['count'][$c] = $count;
                 $result[$i]['field_name'] = $data['MailField']['field_name'];
@@ -163,9 +178,11 @@ class Survey extends SurveyApp {
           for($num=1; $num <= 47; $num++){
             //カウントする
             $coutnt = 0;
-            $count = $messageModel->find('count', array('conditions' => array(
-              $data['MailField']['field_name'] => $num
-            )));
+            //条件文生成
+            $conditions = $postDate;
+            $conditions[] = array($data['MailField']['field_name'] => $num);
+            $count = $messageModel->find('count', array('conditions' => $conditions));
+            //結果格納
             $result[$i]['source'][$c] = $BcText->pref($num);
             $result[$i]['count'][$c] = $count;
             $result[$i]['field_name'] = $data['MailField']['field_name'];

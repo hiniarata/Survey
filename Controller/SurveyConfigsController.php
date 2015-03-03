@@ -157,9 +157,20 @@ class SurveyConfigsController extends SurveyAppController {
       $this->setMessage('無効なIDです。', true);
       $this->redirect(array('action' => 'index'));
     }
+    //期間制限
+    if (!empty($this->request->data['MailField']['begin'])) {
+      $beginData = $this->request->data['MailField']['begin'];
+    } else {
+      $beginData = '';
+    }
+    if (!empty($this->request->data['MailField']['end'])) {
+      $endData = $this->request->data['MailField']['end'];
+    } else {
+      $endData = '';
+    }
     //集計処理
     $count = $this->Message->find('count');
-    $result = $this->Survey->tally($id);
+    $result = $this->Survey->tally($id, $beginData, $endData);
     /* 表示設定 */
     $this->set('count', $count);
     $this->set('result', $result);
