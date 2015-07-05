@@ -1,14 +1,14 @@
 <?php
   $this->BcBaser->css(array(
     'Survey.../js/jqplot/jquery.jqplot'
-  ));
+  ), array('inline'=>false));
   $this->BcBaser->js(array(
     'Survey.jqplot/excanvas.min',
     'Survey.jqplot/jquery.jqplot.min',
     'Survey.jqplot/plugins/jqplot.barRenderer.min',
     'Survey.jqplot/plugins/jqplot.categoryAxisRenderer.min',
     'Survey.jqplot/plugins/jqplot.pointLabels.min',
-  ));
+  ), false);
 ?>
 
 <div class="section">
@@ -19,9 +19,7 @@
       <?php echo $count ?> 件
       </td>
     </tr>
-    </table>
-
-    <?php // var_dump($result) ?>
+  </table>
 
    <table cellpadding="0" cellspacing="0" id="FormTable" class="form-table">
     <?php foreach($result as $data) : ?>
@@ -30,15 +28,14 @@
         <?php echo $data['name'] ?>
         <?php
         //チェックボックスの時は複数回答であることを表示する
-        if ($data['type'] == 'multi_check') { 
-          echo '<br /><span style="font-weight:normal;">（※複数回答）</span>'; 
+        if ($data['type'] == 'multi_check') {
+          echo '<br /><span style="font-weight:normal;">（※複数回答）</span>';
         } ?>
       </th>
       <td class="col-input">
         <?php
         $graphDatas = '';
         for($i=0; $i < count($data['source']); $i++){
-          //echo $data['source'][$i] .'：'. $data['count'][$i] .'<br />';
           if (!empty($graphDatas)) {
             $graphDatas .= ', [' . $data['count'][$i] . ', "' . $data['source'][$i] . '"]';
           } else {
@@ -70,7 +67,6 @@
                 }
             });
         </script>
-
       </td>
     </tr>
   <?php endforeach; ?>
