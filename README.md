@@ -10,6 +10,11 @@ baserCMS用「アンケート」プラグイン
 また、フォームの型や内容を途中で変更すると、正確に集計できない場合がありますのでご注意ください（今まで「テキスト入力」だった項目を「ラジオボタン」に変更した等）。
 
 
+How to Use
+-------
+https://hiniarata.jp/news/archives/21
+
+
 Thanks
 -------
 jqPlot Charts （MIT & GPL2）
